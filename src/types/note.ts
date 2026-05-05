@@ -24,3 +24,4 @@ export type NoteAction =
   | { type: 'RESIZE_NOTE'; payload: { id: string; size: Size } }
   | { type: 'BRING_TO_FRONT'; payload: { id: string } }
   | { type: 'CHANGE_COLOR'; payload: { id: string; color: string } }
+  | { type: 'UPDATE_TEXT'; payload: { id: string; text: string } }

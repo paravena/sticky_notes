@@ -12,6 +12,7 @@ interface StickyNoteProps {
   onResize: (id: string, size: Size) => void
   onBringToFront: (id: string) => void
   onChangeColor: (id: string, color: string) => void
+  onUpdateText: (id: string, text: string) => void
   onDragStateChange: (isDragging: boolean) => void
   onDragPositionChange: (position: { x: number; y: number } | null) => void
 }
@@ -22,6 +23,7 @@ export function StickyNote({
   onResize,
   onBringToFront,
   onChangeColor,
+  onUpdateText,
   onDragStateChange,
   onDragPositionChange,
 }: StickyNoteProps) {
@@ -101,9 +103,13 @@ export function StickyNote({
         onSelectColor={(color) => onChangeColor(note.id, color)}
       />
 
-      <div className="flex-1 overflow-hidden p-2 text-sm text-gray-800">
-        {note.text}
-      </div>
+      <textarea
+        className="flex-1 resize-none bg-transparent p-2 text-sm text-gray-800 outline-none placeholder:text-gray-400"
+        placeholder="Type here..."
+        value={note.text}
+        onChange={(e) => onUpdateText(note.id, e.target.value)}
+        onMouseDown={(e) => e.stopPropagation()}
+      />
 
       <div
         className="absolute right-0 bottom-0 h-4 w-4 cursor-se-resize"

@@ -68,6 +68,13 @@ export function notesReducer(state: Note[], action: NoteAction): Note[] {
           : note,
       )
 
+    case 'UPDATE_TEXT':
+      return state.map((note) =>
+        note.id === action.payload.id
+          ? { ...note, text: action.payload.text }
+          : note,
+      )
+
     default:
       return state
   }
@@ -118,6 +125,13 @@ export function useNotes() {
     [dispatch],
   )
 
+  const updateText = useCallback(
+    (id: string, text: string) => {
+      dispatch({ type: 'UPDATE_TEXT', payload: { id, text } })
+    },
+    [dispatch],
+  )
+
   return {
     notes,
     addNote,
@@ -126,5 +140,6 @@ export function useNotes() {
     resizeNote,
     bringToFront,
     changeColor,
+    updateText,
   }
 }

@@ -10,6 +10,7 @@ export function App() {
     resizeNote,
     bringToFront,
     changeColor,
+    updateText,
   } = useNotes()
 
   return (
@@ -30,6 +31,7 @@ export function App() {
           onRemoveNote={removeNote}
           onBringToFront={bringToFront}
           onChangeColor={changeColor}
+          onUpdateText={updateText}
         />
       </main>
     </div>

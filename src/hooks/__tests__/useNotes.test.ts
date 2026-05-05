@@ -198,4 +198,29 @@ describe('notesReducer', () => {
       expect(result[1].color).toBe('#bfdbfe')
     })
   })
+
+  describe('UPDATE_TEXT', () => {
+    it('updates the text of the specified note', () => {
+      const notes = [makeNote({ id: 'a', text: '' })]
+      const result = notesReducer(notes, {
+        type: 'UPDATE_TEXT',
+        payload: { id: 'a', text: 'Hello world' },
+      })
+
+      expect(result[0].text).toBe('Hello world')
+    })
+
+    it('does not modify other notes', () => {
+      const notes = [
+        makeNote({ id: 'a', text: '' }),
+        makeNote({ id: 'b', text: 'Keep me' }),
+      ]
+      const result = notesReducer(notes, {
+        type: 'UPDATE_TEXT',
+        payload: { id: 'a', text: 'Changed' },
+      })
+
+      expect(result[1].text).toBe('Keep me')
+    })
+  })
 })
