@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import type { Note, Position, Size } from '../types/note'
 import { useDrag } from '../hooks/useDrag'
+import { ColorPicker } from './ColorPicker'
 
 const MIN_WIDTH = 120
 const MIN_HEIGHT = 80
@@ -10,6 +11,7 @@ interface StickyNoteProps {
   onMove: (id: string, position: Position) => void
   onResize: (id: string, size: Size) => void
   onBringToFront: (id: string) => void
+  onChangeColor: (id: string, color: string) => void
   onDragStateChange: (isDragging: boolean) => void
   onDragPositionChange: (position: { x: number; y: number } | null) => void
 }
@@ -19,6 +21,7 @@ export function StickyNote({
   onMove,
   onResize,
   onBringToFront,
+  onChangeColor,
   onDragStateChange,
   onDragPositionChange,
 }: StickyNoteProps) {
@@ -92,6 +95,11 @@ export function StickyNote({
           {note.size.width} × {note.size.height}
         </span>
       </div>
+
+      <ColorPicker
+        currentColor={note.color}
+        onSelectColor={(color) => onChangeColor(note.id, color)}
+      />
 
       <div className="flex-1 overflow-hidden p-2 text-sm text-gray-800">
         {note.text}

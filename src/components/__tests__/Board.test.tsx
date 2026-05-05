@@ -10,6 +10,7 @@ describe('Board', () => {
     onResizeNote: vi.fn(),
     onRemoveNote: vi.fn(),
     onBringToFront: vi.fn(),
+    onChangeColor: vi.fn(),
   }
 
   it('renders the board element', () => {

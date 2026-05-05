@@ -3,7 +3,7 @@ import type { Note, NoteAction, Position } from '../types/note'
 
 const DEFAULT_WIDTH = 200
 const DEFAULT_HEIGHT = 150
-const NOTE_COLORS = [
+export const NOTE_COLORS = [
   '#fef08a',
   '#bbf7d0',
   '#bfdbfe',
@@ -61,6 +61,13 @@ export function notesReducer(state: Note[], action: NoteAction): Note[] {
           : note,
       )
 
+    case 'CHANGE_COLOR':
+      return state.map((note) =>
+        note.id === action.payload.id
+          ? { ...note, color: action.payload.color }
+          : note,
+      )
+
     default:
       return state
   }
@@ -104,5 +111,20 @@ export function useNotes() {
     [dispatch],
   )
 
-  return { notes, addNote, removeNote, moveNote, resizeNote, bringToFront }
+  const changeColor = useCallback(
+    (id: string, color: string) => {
+      dispatch({ type: 'CHANGE_COLOR', payload: { id, color } })
+    },
+    [dispatch],
+  )
+
+  return {
+    notes,
+    addNote,
+    removeNote,
+    moveNote,
+    resizeNote,
+    bringToFront,
+    changeColor,
+  }
 }

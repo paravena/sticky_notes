@@ -173,4 +173,29 @@ describe('notesReducer', () => {
       expect(result[1].zIndex).toBe(2)
     })
   })
+
+  describe('CHANGE_COLOR', () => {
+    it('updates the color of the specified note', () => {
+      const notes = [makeNote({ id: 'a', color: '#fef08a' })]
+      const result = notesReducer(notes, {
+        type: 'CHANGE_COLOR',
+        payload: { id: 'a', color: '#bbf7d0' },
+      })
+
+      expect(result[0].color).toBe('#bbf7d0')
+    })
+
+    it('does not modify other notes', () => {
+      const notes = [
+        makeNote({ id: 'a', color: '#fef08a' }),
+        makeNote({ id: 'b', color: '#bfdbfe' }),
+      ]
+      const result = notesReducer(notes, {
+        type: 'CHANGE_COLOR',
+        payload: { id: 'a', color: '#fbcfe8' },
+      })
+
+      expect(result[1].color).toBe('#bfdbfe')
+    })
+  })
 })
