@@ -54,6 +54,13 @@ export function notesReducer(state: Note[], action: NoteAction): Note[] {
           : note,
       )
 
+    case 'BRING_TO_FRONT':
+      return state.map((note) =>
+        note.id === action.payload.id
+          ? { ...note, zIndex: nextZIndex++ }
+          : note,
+      )
+
     default:
       return state
   }
@@ -90,5 +97,12 @@ export function useNotes() {
     [dispatch],
   )
 
-  return { notes, addNote, removeNote, moveNote, resizeNote }
+  const bringToFront = useCallback(
+    (id: string) => {
+      dispatch({ type: 'BRING_TO_FRONT', payload: { id } })
+    },
+    [dispatch],
+  )
+
+  return { notes, addNote, removeNote, moveNote, resizeNote, bringToFront }
 }

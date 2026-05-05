@@ -12,6 +12,7 @@ interface BoardProps {
   onMoveNote: (id: string, position: Position) => void
   onResizeNote: (id: string, size: Size) => void
   onRemoveNote: (id: string) => void
+  onBringToFront: (id: string) => void
 }
 
 export function Board({
@@ -20,6 +21,7 @@ export function Board({
   onMoveNote,
   onResizeNote,
   onRemoveNote,
+  onBringToFront,
 }: BoardProps) {
   const boardRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -90,6 +92,7 @@ export function Board({
           note={note}
           onMove={onMoveNote}
           onResize={onResizeNote}
+          onBringToFront={onBringToFront}
           onDragStateChange={handleDragStateChange(note.id)}
           onDragPositionChange={handleDragPositionChange(note.id)}
         />

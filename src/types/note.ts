@@ -22,3 +22,4 @@ export type NoteAction =
   | { type: 'REMOVE_NOTE'; payload: { id: string } }
   | { type: 'MOVE_NOTE'; payload: { id: string; position: Position } }
   | { type: 'RESIZE_NOTE'; payload: { id: string; size: Size } }
+  | { type: 'BRING_TO_FRONT'; payload: { id: string } }

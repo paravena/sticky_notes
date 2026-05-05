@@ -9,6 +9,7 @@ interface StickyNoteProps {
   note: Note
   onMove: (id: string, position: Position) => void
   onResize: (id: string, size: Size) => void
+  onBringToFront: (id: string) => void
   onDragStateChange: (isDragging: boolean) => void
   onDragPositionChange: (position: { x: number; y: number } | null) => void
 }
@@ -17,6 +18,7 @@ export function StickyNote({
   note,
   onMove,
   onResize,
+  onBringToFront,
   onDragStateChange,
   onDragPositionChange,
 }: StickyNoteProps) {
@@ -32,7 +34,10 @@ export function StickyNote({
   }, [note.size])
 
   const moveDrag = useDrag({
-    onDragStart: () => onDragStateChange(true),
+    onDragStart: () => {
+      onBringToFront(note.id)
+      onDragStateChange(true)
+    },
     onDragMove: useCallback(
       (dx: number, dy: number) => {
         const newPos = {

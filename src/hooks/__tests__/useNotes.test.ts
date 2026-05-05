@@ -145,4 +145,32 @@ describe('notesReducer', () => {
       expect(result[1].size).toEqual({ width: 200, height: 150 })
     })
   })
+
+  describe('BRING_TO_FRONT', () => {
+    it('assigns a higher zIndex to the specified note', () => {
+      const notes = [
+        makeNote({ id: 'a', zIndex: 1 }),
+        makeNote({ id: 'b', zIndex: 2 }),
+      ]
+      const result = notesReducer(notes, {
+        type: 'BRING_TO_FRONT',
+        payload: { id: 'a' },
+      })
+
+      expect(result[0].zIndex).toBeGreaterThan(notes[1].zIndex)
+    })
+
+    it('does not modify other notes', () => {
+      const notes = [
+        makeNote({ id: 'a', zIndex: 1 }),
+        makeNote({ id: 'b', zIndex: 2 }),
+      ]
+      const result = notesReducer(notes, {
+        type: 'BRING_TO_FRONT',
+        payload: { id: 'a' },
+      })
+
+      expect(result[1].zIndex).toBe(2)
+    })
+  })
 })

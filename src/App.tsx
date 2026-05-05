@@ -2,7 +2,8 @@ import { useNotes } from './hooks/useNotes'
 import { Board } from './components/Board'
 
 export function App() {
-  const { notes, addNote, removeNote, moveNote, resizeNote } = useNotes()
+  const { notes, addNote, removeNote, moveNote, resizeNote, bringToFront } =
+    useNotes()
 
   return (
     <div className="relative h-full w-full bg-gray-100">
@@ -20,6 +21,7 @@ export function App() {
           onMoveNote={moveNote}
           onResizeNote={resizeNote}
           onRemoveNote={removeNote}
+          onBringToFront={bringToFront}
         />
       </main>
     </div>
