@@ -22,7 +22,7 @@ function pickColor(): string {
   return NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)]
 }
 
-function notesReducer(state: Note[], action: NoteAction): Note[] {
+export function notesReducer(state: Note[], action: NoteAction): Note[] {
   switch (action.type) {
     case 'ADD_NOTE':
       return [
