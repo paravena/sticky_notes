@@ -1,4 +1,9 @@
+import { useNotes } from './hooks/useNotes'
+import { Board } from './components/Board'
+
 export function App() {
+  const { notes, addNote } = useNotes()
+
   return (
     <div className="relative h-full w-full bg-gray-100">
       <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between bg-white/80 px-6 py-3 shadow-sm backdrop-blur-sm">
@@ -9,7 +14,7 @@ export function App() {
       </header>
 
       <main className="h-full pt-14">
-        <div className="h-full w-full bg-[repeating-linear-gradient(0deg,transparent,transparent_19px,#e5e7eb_19px,#e5e7eb_20px),repeating-linear-gradient(90deg,transparent,transparent_19px,#e5e7eb_19px,#e5e7eb_20px)]" />
+        <Board notes={notes} onCreateNote={addNote} />
       </main>
     </div>
   )
