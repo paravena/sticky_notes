@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Sticky Notes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A single-page sticky notes board built with React, TypeScript, and Vite. Create, move, resize, edit, and delete notes on an interactive canvas.
 
-Currently, two official plugins are available:
+**Live demo:** [paravena.github.io/sticky_notes](https://paravena.github.io/sticky_notes/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Create notes** — double-click anywhere on the board
+- **Move notes** — drag from the header bar
+- **Resize notes** — drag from the bottom-right corner (minimum 120×80)
+- **Delete notes** — drag a note to the trash zone at the bottom
+- **Edit text** — click the note body and start typing
+- **Change color** — pick from six colors below the header
+- **Z-order** — dragging a note brings it to the front
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+```bash
+# Install dependencies
+npm install
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Start development server
+npm run dev
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Command              | Description                        |
+| -------------------- | ---------------------------------- |
+| `npm run dev`        | Start the dev server               |
+| `npm run build`      | Build for production               |
+| `npm run preview`    | Preview the production build       |
+| `npm run test`       | Run tests once                     |
+| `npm run test:watch` | Run tests in watch mode            |
+| `npm run lint`       | Lint the codebase with ESLint      |
+| `npm run format`     | Format source files with Prettier  |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tech Stack
+
+- **React 19** with TypeScript
+- **Vite** for bundling and dev server
+- **Tailwind CSS** for styling (utility classes only, no UI library)
+- **Vitest** + **Testing Library** for unit tests
+- **ESLint** + **Prettier** for code quality
+
+## Architecture
+
 ```
+src/
+├── types/          # Shared types (Note, Position, Size, actions)
+├── hooks/          # useNotes (state), useDrag (mouse drag logic)
+├── components/     # Board, StickyNote, ColorPicker, TrashZone
+├── test/           # Test setup
+├── App.tsx         # Root — connects state to the board
+└── main.tsx        # Entry point
+```
+
+**Data flow** is top-down. All note state lives in a single `useReducer` inside `useNotes`. The `App` component passes data and callbacks to `Board`, which passes them to each `StickyNote`. There is no shared context or external state library — the component tree is shallow enough that props are simple and explicit.
+
+**Drag handling** is extracted into a reusable `useDrag` hook. It attaches `mousemove` and `mouseup` listeners to `document` so the drag keeps working even when the cursor moves faster than the element. Both move and resize use the same hook with different callbacks.
+
+For more details, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+## Trade-offs
+
+- **Props over context** — The tree is only three levels deep (App → Board → StickyNote), so props are straightforward. If the app grew to include features like multi-board support or collaborative editing, a context or state library would make more sense.
+- **Module-level `nextZIndex` counter** — Z-index values come from a simple incrementing counter outside of React state. This is easy to reason about but would not survive a page reload. For persistence, this would need to be derived from saved data.
+- **No local storage or API** — Notes exist only in memory. Adding persistence was left out to keep the scope focused, but the reducer design makes it easy to add later (serialize on change, load on init).
+- **Mouse-only drag** — The drag implementation uses mouse events. Touch support would require adding `touchstart`, `touchmove`, and `touchend` handlers to the `useDrag` hook.
+- **Minimal test coverage on drag** — Drag interactions rely on global mouse events, which are hard to simulate realistically in jsdom. Tests focus on the reducer (where all business logic lives) and basic component rendering instead.
